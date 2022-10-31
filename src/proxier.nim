@@ -20,11 +20,9 @@ proc generateMultiple*() {.async.} =
       await sleepAsync(1000)
       continue
     var toGen: seq[string]
-    echo "here1"
     for _ in 0..<cfg.batchSize:
       if toStartGenerate.len == 0:
         break
-      echo "adding"
       toGen.add toStartGenerate.pop()
     echo fmt"Generating a batch of {toGen.len} images"
     let prompts = toGen.mapIt(tasks[it].prompt)
@@ -42,7 +40,7 @@ proc genImageWrapper*(taskId: string, prompt: string) {.async.} =
     of AutoWebUI: await auto_webui.genImage(prompt)
 
   if isOk:
-    echo "Added generated task to tasks list!"
+    #echo "Added generated task to tasks list!"
     tasks[taskId] = ImageTask(content: content, state: ImageTaskState.Generated, prompt: prompt)
   else:
     # Doesn't look like wombo has a way to tell that a task couldn't finish generating,
@@ -62,13 +60,13 @@ proc addTask*(ctx: Context) {.async, gcsafe.} =
     toStartGenerate.add(taskId)
   else:
     asyncCheck genImageWrapper(taskId, prompt)
-  echo "Accepted task parameters for generation: ", taskId, " prompt: ", prompt
+  #echo "Accepted task parameters for generation: ", taskId, " prompt: ", prompt
 
 proc newTask*(ctx: Context) {.async, gcsafe.} =
   let newId = uuid4()
   tasks[$newId] = ImageTask()
   resp jsonResponse(%*{"id": $newId})
-  echo "Generated new task: ", $newId
+  #echo "Generated new task: ", $newId
   return
 
 proc checkTask*(ctx: Context) {.async, gcsafe.} =   
@@ -79,7 +77,7 @@ proc checkTask*(ctx: Context) {.async, gcsafe.} =
     resp jsonResponse(%*{"photo_url_list": []})
     return
   else:
-    echo "Responding with generated image"
+    #echo "Responding with generated image"
     resp jsonResponse(%*{"photo_url_list": [fmt"{myHost}/images/{taskId}/final.jpg"]})
 
 proc serveImage(ctx: Context) {.async, gcsafe.} = 

@@ -7,7 +7,6 @@ import types
 var cfg*: Config
 
 proc readConfig* = 
-  echo "reading"
   let parsed = parseFile("config.toml")
   cfg = Config(
     port: parsed["port"].getInt,

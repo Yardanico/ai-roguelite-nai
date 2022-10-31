@@ -34,7 +34,7 @@ proc genImage*(prompt: string): Future[(bool, string)] {.async.} =
   try:
     let resp = await c.post(fmt"{host}/sdapi/v1/txt2img", $payload)
     if resp.code != Http200:
-      echo await resp.body
+      echo fmt"Got an error from SD: {await resp.body}"
       return (false, "")
     
     let body = parseJson(await resp.body)
@@ -60,7 +60,6 @@ proc genImagesBatch*(prompts: seq[string]): Future[(bool, seq[string])] {.async.
   payload["seed"] = %rand(0'i32..int32.high-1)
   payload["batch_size"] = %cfg.batch_size
   payload["steps"] = %cfg.steps # default, maybe change in the future
-  echo payload
   try:
     let resp = await c.post(fmt"{host}/sdapi/v1/txt2img", $payload)
     if resp.code != Http200:
