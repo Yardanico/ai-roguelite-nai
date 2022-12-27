@@ -1,4 +1,4 @@
-import std/[strutils, httpclient, asyncdispatch, strformat, os, tables, sequtils]
+import std/[strutils, httpclient, asyncdispatch, strformat, tables, sequtils]
 import uuid4
 import prologue
 
@@ -60,7 +60,7 @@ proc addTask*(ctx: Context) {.async, gcsafe.} =
     toStartGenerate.add(taskId)
   else:
     asyncCheck genImageWrapper(taskId, prompt)
-  #echo "Accepted task parameters for generation: ", taskId, " prompt: ", prompt
+  echo "Accepted task parameters for generation: ", taskId, " prompt: ", prompt
 
 proc newTask*(ctx: Context) {.async, gcsafe.} =
   let newId = uuid4()

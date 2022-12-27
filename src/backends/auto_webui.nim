@@ -1,4 +1,4 @@
-import std/[httpclient, asyncdispatch, strutils, json, strformat, os, random, base64, sequtils]
+import std/[httpclient, asyncdispatch, strutils, json, strformat, random, base64]
 
 
 import ../config
@@ -38,7 +38,7 @@ proc genImage*(prompt: string): Future[(bool, string)] {.async.} =
       return (false, "")
     
     let body = parseJson(await resp.body)
-    let imageData = body["images"][0].getStr().split(",")[1].decode()
+    let imageData = body["images"][0].getStr().split(",")[0].decode()
 
     return (true, imageData)
   finally:
