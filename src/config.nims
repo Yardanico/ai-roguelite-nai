@@ -1,3 +1,4 @@
+# --d:release # uncomment to build release optimized version (smaller, slightly faster, takes longer to build)
 --d:ssl
 --threadAnalysis:off
 --opt:speed
